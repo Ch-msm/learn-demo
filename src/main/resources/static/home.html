@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ch">
+<head>
+  <meta charset="UTF-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>码上聘业务管理系统</title>
+  <script src="common/jquery-3.2.1.min.js"></script>
+  <link href="home.css" rel="stylesheet"/>
+  <link href="common/main.css" rel="stylesheet"/>
+  <script src="home.js"></script>
+  <script src="common/main.js"></script>
+  <script>
+    //禁用浏览器上下文菜单
+    document.addEventListener('contextmenu', evt => {
+      evt.preventDefault();
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      Home.init();
+    });
+  </script>
+</head>
+<body>
+<div class="navigation">
+  <h3>码上聘业务管理系统</h3>
+  <span id="page-title">基本信息</span>
+</div>
+<div class="main-content">
+  <div class="menu">
+    <ul>
+      <li class="action" data-menu="基本信息">
+        <svg class="icon" height="16" p-id="2825" t="1599046384509" version="1.1"
+             viewBox="0 0 1024 1024" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M512 120c14.5 0 29.3 1.6 43.9 4.6 78.4 16.4 141.7 84 153.7 164.2 12.3 82-24.4 159.5-95.8 202.2-18.1 10.8-28.6 30.9-27.2 52 1.5 21.1 14.6 39.5 34.1 47.7 115.8 48.9 198.6 169 215.5 313.3H187.3c17.4-144.3 100.1-264.4 215.9-313.3 19.4-8.2 32.6-26.7 34.1-47.7 1.5-21.1-9-41.1-27.2-52-61.4-36.7-98.1-100.6-98.1-171 0-110.3 89.7-200 200-200m0-56c-141.4 0-256 114.6-256 256 0 93.5 50.6 174.4 125.5 219.1C250 594.7 151.7 731.2 131.7 897.3c-4 33.3 22.5 62.7 56 62.7h648.5c33.5 0 60-29.4 56-62.7-20-166.1-118.2-302.7-249.7-358.2 85.2-50.9 139-148.7 122.5-258.6-15.5-103.1-95.5-189.3-197.6-210.7-18.8-3.9-37.3-5.8-55.4-5.8z"
+              p-id="2826"></path>
+        </svg>
+        基本信息
+      </li>
+      <li data-menu="用户管理">
+        <svg class="icon" height="16" p-id="3602" t="1599046431545" version="1.1"
+             viewBox="0 0 1024 1024" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M224 288a32 32 0 0 1 0-64h576a32 32 0 0 1 0 64z m0 192a32 32 0 0 1 0-64h576a32 32 0 0 1 0 64z m0 192a32 32 0 0 1 0-64h576a32 32 0 0 1 0 64z m0 192a32 32 0 0 1 0-64h576a32 32 0 0 1 0 64z"
+              p-id="3603"></path>
+        </svg>
+        用户管理
+      </li>
+      <li data-menu="退出系统">
+        <svg class="icon" height="16" p-id="4370" t="1599046450137" version="1.1"
+             viewBox="0 0 1024 1024" width="16" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M738.133333 274.346667l-60.16 60.16L812.8 469.333333H368.213333v85.333334h443.733334l-134.826667 134.826666 60.16 60.16 208.213333-207.786666v-60.586667L738.133333 274.346667z"
+              p-id="4371"></path>
+          <path
+              d="M518.826667 789.333333H163.84v-554.666666h355.413333v128h85.333334v-128a85.333333 85.333333 0 0 0-85.333334-85.333334H163.84a85.333333 85.333333 0 0 0-85.333333 85.333334v554.666666a85.333333 85.333333 0 0 0 85.333333 85.333334h355.413333a85.333333 85.333333 0 0 0 85.333334-85.333334v-128h-85.333334z m0 0z"
+              p-id="4372"></path>
+        </svg>
+        退出系统
+      </li>
+    </ul>
+  </div>
+  <div class="iframe">
+    <iframe id="iframe" src="user/base_info.html"></iframe>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>登录</title>
+  <link href="common/main.css" rel="stylesheet">
+  <script src="common/jquery-3.2.1.min.js"></script>
+  <script src="common/main.js"></script>
+</head>
+<style>
+  body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f9fb;
+  }
+
+  #center {
+    width: 520px;
+    height: 380px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-color: transparent;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .05);
+    background-color: white;
+  }
+
+  #center > div {
+    display: inline-block;
+    width: 364px;
+  }
+
+  .input {
+    width: 364px;
+    height: 40px;
+    border: 1px solid #CCCCCC;
+    margin: 10px;
+  }
+
+  #center input {
+    display: block;
+    border: none;
+    background: none;
+    margin-left: 20px;
+    padding: unset;
+    min-width: unset;
+    height: 100%;
+    width: 300px;
+    outline: none;
+  }
+
+  .input-done {
+    border: none;
+  }
+
+  .input-register {
+    margin: 10px;
+  }
+
+  .input-register > span:hover {
+    color: #0053b6;
+    cursor: pointer;
+  }
+
+  #center button {
+    display: block;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    height: 100%;
+    background-color: #33cabb;
+    color: #ffffff;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .headline {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #cccccc;
+  }
+</style>
+<body>
+<div id="center">
+  <div>
+    <div class="headline"><h2>码上聘业务管理系统</h2></div>
+    <div class="input">
+      <input autocomplete="off" id="username" placeholder="用户名">
+    </div>
+    <div class="input input-pwd">
+      <input id="password" placeholder="密码" type="password">
+    </div>
+    <div class="input-register">
+      <span id="register">我要注册</span>
+    </div>
+    <div class="input input-done">
+      <button id="submit">登录</button>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let uidInput = document.getElementById('username');
+    let pwdInput = document.getElementById('password');
+    let register = document.getElementById('register');
+    let submit = document.getElementById('submit');
+
+    function login() {
+      let username = uidInput.value;
+      let password = pwdInput.value;
+      if (!username || !password) {
+        alert('请输入用户名或密码');
+        return;
+      }
+      let cTipWorking = new CTipWorking("正在登录");
+      Main.post({
+        username: username,
+        password: password
+      }, 'login', data => {
+        cTipWorking.destroy();
+        if (data.success) {
+          //缓存当前token和当前用户
+          sessionStorage.setItem('token', data.data['token']);
+          sessionStorage.setItem('user', JSON.stringify(data.data['user']));
+          window.location.href = 'home.html';
+        } else {
+          alert('用户名或密码错误');
+        }
+      });
+    }
+
+    document.body.addEventListener('keypress', (evt) => {
+      if (evt.key === 'Enter') {
+        login();
+      }
+    });
+    submit.addEventListener('click', () => {
+      login();
+    });
+    register.addEventListener('click', () => {
+      let cDialog = new CDialog("注册");
+      let table = $(`
+          <table class="tableForm" style="padding: 35px">
+              <tbody>
+              <tr>
+                <td class="label">姓名:</td>
+                <td><input data-name="name" placeholder="请输入姓名" type="text" autofocus/></td>
+              </tr>
+              <tr>
+                <td class="label">用户名:</td>
+                <td><input data-name="username" placeholder="请输入用户名"/></td>
+              </tr>
+              <tr>
+                <td class="label">密码:</td>
+                <td><input data-name="password" type="password" placeholder="请输入密码"/></td>
+              </tr>
+             <tr>
+                <td class="label">确认:</td>
+                <td><input data-name="done" type="password" placeholder="请再次输入密码"/></td>
+              </tr>
+              </tbody>
+            </table>
+        `);
+      cDialog.setContent(table);
+      cDialog.addAction('确定', () => {
+        let array = [...$('[data-name]', table)];
+        let json = {};
+        for (let e of array) {
+          if (!e.value) {
+            alert(e.placeholder);
+            return;
+          }
+          json[e.dataset['name']] = e.value;
+        }
+        if (json['password'] !== json['done']) {
+          alert('两次输入密码不一致');
+          return;
+        }
+        delete json['done'];
+        Main.post(json, 'user/add', data => {
+          console.log(data)
+          if (!data.success) {
+            alert(data.message);
+          } else {
+            alert('注册成功');
+            cDialog.destroy();
+          }
+        })
+      });
+      cDialog.addAction('我要登录', () => {
+        cDialog.destroy();
+      }, true)
+    });
+  });
+</script>
+</html>

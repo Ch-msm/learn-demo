@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>基本信息</title>
+  <script src="../common/jquery-3.2.1.min.js"></script>
+  <link href="../common/main.css" rel="stylesheet"/>
+  <script src="../common/main.js"></script>
+  <style>
+    #table > tbody > tr > td:last-child {
+      color: #33cabb;
+    }
+  </style>
+</head>
+<body>
+<table class="tableForm" id="table">
+  <tr>
+    <td style="width: 100px">姓名：</td>
+    <td data-name="name"></td>
+  </tr>
+  <tr>
+    <td>性别：</td>
+    <td data-name="gender"></td>
+  </tr>
+  <tr>
+    <td>用户名：</td>
+    <td data-name="username"></td>
+  </tr>
+  <tr>
+    <td>上次登录时间：</td>
+    <td data-name="loginTime"></td>
+  </tr>
+</table>
+
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let user = Main.getMe();
+    $('[data-name="name"]').text(user.name);
+    let gender = user['gender'];
+    $('[data-name="gender"]').text(gender === 1 ? '男' : gender === 2 ? '女' : '未知');
+    $('[data-name="username"]').text(user.username);
+    $('[data-name="loginTime"]').text(Main.dateToTimeString(user['loginTime']));
+  });
+  //跳转到登录页面
+  if (!sessionStorage.getItem('token')) {
+    alert('请登录');
+    window.parent.location.href = location.origin;
+  }
+</script>
+
+</html>

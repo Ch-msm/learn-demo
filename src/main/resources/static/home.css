@@ -1,0 +1,84 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f6fa;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+h3 {
+  display: inline-block;
+}
+
+.navigation {
+  position: relative;
+  height: 60px;
+  padding-left: 20px;
+  line-height: 60px;
+  color: #0c0c0c52;
+  text-align: left;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+}
+
+.navigation > span {
+  position: absolute;
+  display: inline-block;
+  border-left: 1px solid #f5f6fa;
+  left: 250px;
+  padding-left: 10px;
+  color: #a0a0a0;
+}
+
+.main-content {
+  width: 100%;
+  height: calc(100% - 60px);
+  display: flex;
+}
+
+.menu {
+  background-color: white;
+  width: 250px;
+  height: 100%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+}
+
+.menu > ul {
+  list-style: none;
+}
+
+.menu > ul > li {
+  padding: 13px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.menu > ul > li > svg {
+  margin-right: 10px;
+}
+
+.menu > ul > li:hover {
+  background-color: #f5f6fa;
+}
+
+.iframe {
+  width: calc(100% - 270px);
+  height: calc(100% - 20px);
+  background-color: white;
+  margin: 10px;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.action {
+  background-color: #f5f6fa;
+}

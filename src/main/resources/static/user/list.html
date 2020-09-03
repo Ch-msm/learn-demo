@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>用户列表</title>
+  <script src="../common/jquery-3.2.1.min.js"></script>
+  <link href="../common/main.css" rel="stylesheet"/>
+  <script src="../common/main.js"></script>
+  <style>
+    #container {
+      padding: 10px;
+    }
+
+    #list {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border-collapse: collapse;
+    }
+
+    #list th, #list td {
+      padding: 10px;
+      line-height: 1.5;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    #list td {
+      color: #4d5259;
+    }
+
+    #list a {
+      cursor: pointer;
+      color: #a0a0a0;
+      margin: 0 5px;
+    }
+
+    #list thead {
+      border-bottom: 2px solid #ddd;
+    }
+
+    #header {
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #header button {
+      padding: 8px 12px;
+      letter-spacing: 1px;
+      border-radius: 2px;
+      outline: none !important;
+      -webkit-transition: 0.15s linear;
+      transition: 0.15s linear;
+      background-color: #fcfdfe;
+      border-color: #ebebeb;
+      color: #8b95a5;
+      cursor: pointer;
+    }
+
+    #header input {
+      font-size: 14px;
+      height: 37px;
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+<div id="container">
+  <div id="header">
+    <button id="add">添加用户</button>
+    <span>
+      <input placeholder="请输入用户姓名" type="search"/>
+      <button id="search">搜索</button>
+    </span>
+  </div>
+  <table id="list">
+    <thead>
+    <tr>
+      <th>姓名</th>
+      <th>性别</th>
+      <th>用户名</th>
+      <th>省</th>
+      <th>市</th>
+      <th style="width: 130px;">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+</body>
+<script>
+  /**
+   * 添加或修改用户
+   * @param user
+   */
+  const updateOrAdd = user => {
+    let cDialog = new CDialog(!user ? "添加用户" : "修改用户");
+    let table = $(`
+          <table class="tableForm" style="padding: 35px;">
+              <tbody>
+              <tr>
+                <td class="label">姓名:</td>
+                <td><input data-name="name" placeholder="请输入姓名" type="text" autofocus/></td>
+              </tr>
+               <tr>
+                <td class="label optional">性别:</td>
+                <td>
+                  <select data-name="gender">
+                     <option value="0">请选择</option>
+                     <option value="1">男</option>
+                     <option value="2">女</option>
+                  </select>
+                 </td>
+              </tr>
+              <tr>
+                <td class="label">用户名:</td>
+                <td><input data-name="username" placeholder="请输入用户名"/></td>
+              </tr>
+              <tr>
+                <td class="label optional" >省:</td>
+                <td>
+                 <select data-name="province">
+                     <option value="">请选择</option>
+                     <option value="湖北省">湖北省</option>
+                     <option value="江西省">江西省</option>
+                  </select>
+                </td>
+              </tr>
+             <tr>
+                <td class="label optional">市</td>
+                <td><select data-name="city"><option value="">请选择</option></select></td>
+              </tr>
+              </tbody>
+            </table>
+        `);
+    cDialog.setContent(table);
+    //绑定事件
+    let map = new Map([
+      ['湖北省', ['武汉', '黄陂', '潜江', '宜昌']],
+      ['江西省', ['南昌', '九江', '景德镇']]
+    ]);
+    let citySelect = $('[ data-name="city"]', table), provinceSelect = $('[ data-name="province"]', table);
+    provinceSelect.on('change', function () {
+      let value = this.value;
+      let array = map.get(value);
+      $('option:not(:first-child)', citySelect).remove();
+      if (array) {
+        for (let city of array) {
+          citySelect.append(`<option value="${city}">${city}</option>`);
+        }
+      }
+    });
+    //如果参数user存在 为修改用户
+    if (user) {
+      $('[data-name="name"]', table).val(user.name);
+      $('[data-name="username"]', table).val(user.username);
+      if (user['gender']) {
+        $('[data-name="gender"]', table).val(user['gender']);
+      }
+      if (user['province']) {
+        provinceSelect.val(user['province']);
+        provinceSelect.change();
+      }
+      if (user['city']) {
+        citySelect.val(user['city']);
+      }
+    }
+    cDialog.addAction('确定', () => {
+      let array = [...$('[data-name]', table)];
+      let json = {};
+      for (let e of array) {
+        let name = e.dataset['name'];
+        if (!e.value && e.placeholder) {
+          alert(e.placeholder);
+          return;
+        }
+        json[name] = e.value;
+      }
+
+      if (user) {
+        for (let k of Object.keys(json)) {
+          user[k] = json[k];
+        }
+        delete user['createTime'];
+        delete user['loginTime'];
+        Main.put(user, 'user/update', data => {
+          if (!data.success) {
+            alert(data.message);
+          } else {
+            loadData();
+            cDialog.destroy();
+          }
+        })
+
+      } else {
+        Main.post(json, 'user/add', data => {
+          if (!data.success) {
+            alert(data.message);
+          } else {
+            loadData();
+            cDialog.destroy();
+          }
+        })
+      }
+    });
+    cDialog.addAction('取消', () => {
+      cDialog.destroy();
+    }, true)
+  };
+
+  /**
+   * 加载列表数据
+   */
+  const loadData = () => {
+    let working = new CTipWorking('正在加载数据'), tbody = $('tbody', '#list');
+    tbody.empty();
+    Main.get({keyword: $('[type=search]').val()}, 'user/find', data => {
+      working.destroy();
+      for (let user of data.data.list) {
+        let tr = $('<tr/>'), gender = user['gender'];
+        tr.append(`<td>${user.name}</td>`);
+        tr.append(`<td>${gender === 1 ? '男' : gender === 2 ? '女' : '未知'}</td>`);
+        tr.append(`<td>${user.username}</td>`);
+        tr.append(`<td>${user['province'] || ''}</td>`);
+        tr.append(`<td>${user.city || ''}</td>`);
+        tr.append(
+            $('<td>')
+                .append(
+                    $('<a title="修改">修改</a>').on('click', () => {
+                      updateOrAdd(user)
+                    }),
+                    $('<a title="删除">删除</a>').on('click', () => {
+                      deleteUser(user.id, user.name);
+                    })
+                )
+        );
+        tr.appendTo(tbody);
+      }
+    });
+  };
+
+  /**
+   * 删除用户
+   */
+  const deleteUser = (id, name) => {
+    let cDialog = new CDialog('提示');
+    cDialog.setContent($(`<table class="tableForm"><tr><td style="text-align: center;">您确定要删除用户"${name}"吗？</td></tr></table>`));
+    cDialog.addAction('确定', () => {
+      Main.delete(id, 'user/delete', () => {
+        cDialog.destroy();
+        loadData();
+      })
+    });
+    cDialog.addAction('取消', () => {
+      cDialog.destroy();
+    }, true)
+  };
+  document.addEventListener('DOMContentLoaded', () => {
+    loadData();
+  });
+  $('#add').on('click', () => {
+    updateOrAdd();
+  });
+  $('#search').on('click', () => {
+    loadData();
+  });
+</script>
+</html>
