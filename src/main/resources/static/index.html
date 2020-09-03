@@ -183,8 +183,9 @@
           return;
         }
         delete json['done'];
+        let cTipWorking = new CTipWorking("正在注册");
         Main.post(json, 'user/add', data => {
-          console.log(data)
+          cTipWorking.destroy();
           if (!data.success) {
             alert(data.message);
           } else {

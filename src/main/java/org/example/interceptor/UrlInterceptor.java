@@ -25,8 +25,6 @@ public class UrlInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
     String token = httpServletRequest.getHeader("token");
-    String requestURI = httpServletRequest.getRequestURI();
-    System.out.println(requestURI);
     return Constant.TOKEN.containsKey(token);
   }
 }

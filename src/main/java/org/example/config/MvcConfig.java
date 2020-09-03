@@ -19,6 +19,7 @@ public class MvcConfig implements WebMvcConfigurer {
     interceptorRegistration.addPathPatterns("/**");
     interceptorRegistration.excludePathPatterns(
         "/",
+        "/user/add",
         "/login",
         "/**/*.html",
         "/**/*.js",
