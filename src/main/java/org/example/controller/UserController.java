@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 
 /**
@@ -54,6 +55,10 @@ public class UserController {
     String explain = "用户列表";
     L.info(explain + ":" + keyword);
     List<User> list = userMapper.findUser(keyword);
+
+    //清空密码
+    list = list.stream().peek(o -> o.setPassword("")).collect(Collectors.toList());
+
     return R.ok().data("list", list).data("total", list.size()).message(explain);
   }
 
