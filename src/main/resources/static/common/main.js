@@ -128,7 +128,7 @@ const Main = {
    * java Date 转时间字符串
    */
   dateToTimeString(date) {
-    if (+date === 0) {
+    if (!date) {
       return '';
     }
     return new Date(date).Format('yyyy-MM-dd hh:mm:ss');
