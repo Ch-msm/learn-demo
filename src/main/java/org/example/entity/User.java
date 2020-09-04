@@ -51,9 +51,9 @@ public class User {
 
   }
 
-  public User(String username, Date createTime) {
+  public User(String username, Date loginTime) {
     this.username = username;
-    this.createTime = createTime;
+    this.loginTime = loginTime;
   }
 
   public Long getId() {

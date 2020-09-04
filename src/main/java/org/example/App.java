@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author x
  * @description 启动器
- * @Date: 2020/9/3 20:01
+ * @Date: 2020/9/2 20:01
  */
 @SpringBootApplication
 public class App {
